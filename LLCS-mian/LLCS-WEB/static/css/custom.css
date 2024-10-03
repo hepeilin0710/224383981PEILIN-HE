@@ -1,0 +1,38 @@
+/* custom.css */
+body {
+    font-family: 'Arial', sans-serif;
+}
+.bg-purple {
+    background-color: #5d55fa; ;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #5d55fa;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    color: #5d55fa;
+    text-align: center;
+}
+
+.dropdown-menu {
+    min-width: 150px;
+    font-size: 0.9rem;
+}
+
+/* Styles for the dropdown button to display user avatar */
+.navbar .dropdown button {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+}
+
+.navbar .dropdown img {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+}
+

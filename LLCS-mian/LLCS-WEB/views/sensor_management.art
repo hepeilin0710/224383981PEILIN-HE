@@ -1,0 +1,282 @@
+{{extend './base.art'}}
+<block name="title">sensor_management</block>
+
+{{block 'content'}}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.0.0/dist/echarts.min.js"></script>
+
+<h2>Sensor Management</h2>
+<button type="button" class="btn btn-sm btn-primary add-sensor-btn">Add Sensor</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>equipmentname</th>
+            <th>equipmenturl</th>
+            <th>equipmentstate</th>
+            <th>remarks</th>
+            <th>Operation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ each sensors }}
+        <tr data-id="{{ $value.id }}" data-equipmentname="{{ $value.equipmentname }}"
+            data-equipmenturl="{{ $value.equipmenturl }}" data-equipmentstate="{{ $value.equipmentstate }}"
+            data-remarks="{{ $value.remarks }}">
+            <td>{{ $value.equipmentname }}</td>
+            <td>{{ $value.equipmenturl }}</td>
+            <td>{{ $value.equipmentstate }}</td>
+            <td>{{ $value.remarks }}</td>
+            <td>
+                <button class="btn btn-sm btn-primary update-btn" data="{{ $value.equipmentname }}">Update</button>
+                <button class="btn btn-sm btn-danger delete-btn" data="{{ $value.equipmentname }}">Delete</button>
+            </td>
+        </tr>
+        {{ /each }}
+    </tbody>
+</table>
+<div id="adminPieChart" style="width: 600px;height:400px;"></div>
+
+<!-- Add Sensor Modal -->
+<div class="modal add-sensor-modal" tabindex="-1" role="dialog" style="display:none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Sensor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-sensor-form">
+                    <div class="form-group">
+                        <label for="equipmentname">Name:</label>
+                        <input type="text" class="form-control" id="equipmentname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="equipmenturl">URL:</label>
+                        <input type="text" class="form-control" id="equipmenturl" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="equipmentstate">State:</label>
+                        <select class="form-control" id="equipmentstate" required>
+                            <option value="Not started">Not started</option>
+                            <option value="Started">Started</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">Remarks:</label>
+                        <textarea class="form-control" id="remarks" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Sensor Modal -->
+<div class="modal update-sensor-modal" tabindex="-1" role="dialog" style="display:none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Sensor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-sensor-form">
+                    <div class="form-group">
+                        <label for="update-equipmentname">Name:</label>
+                        <input type="text" class="form-control" id="update-equipmentname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-equipmenturl">URL:</label>
+                        <input type="text" class="form-control" id="update-equipmenturl" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-equipmentstate">State:</label>
+                        <select class="form-control" id="update-equipmentstate" required>
+                            <option value="Not started">Not started</option>
+                            <option value="Started">Started</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-remarks">Remarks:</label>
+                        <textarea class="form-control" id="update-remarks" rows="3"></textarea>
+                    </div>
+                    <input type="hidden" id="update-sensor-id" name="update-sensor-id">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addSensorModal = document.querySelector('.add-sensor-modal');
+        const updateSensorModal = document.querySelector('.update-sensor-modal');
+        const addSensorBtn = document.querySelector('.add-sensor-btn');
+        const addSensorForm = document.getElementById('add-sensor-form');
+        const updateSensorForm = document.getElementById('update-sensor-form');
+        const updateSensorBtn = document.querySelector('.update-btn')
+
+        addSensorBtn.addEventListener('click', function () {
+            addSensorModal.style.display = 'block';
+            document.getElementById('update-equipmentname').value = equipmentname;
+            document.getElementById('update-equipmenturl').value = equipmenturl;
+            document.getElementById('update-equipmentstate').value = equipmentstate;
+            document.getElementById('update-remarks').value = remarks;
+            document.getElementById('update-sensor-id').value = sensorId; // 添加对传感器 ID 的隐藏输入字段
+        });
+        // 使用事件委托来监听所有更新按钮的点击事件
+        document.body.addEventListener('click', function (event) {
+            if (event.target && event.target.classList.contains('update-btn')) {
+                const row = event.target.closest('tr');
+                const equipmentname = row.cells[0].textContent;
+                const equipmenturl = row.cells[1].textContent;
+                const equipmentstate = row.cells[2].textContent;
+                const remarks = row.cells[3].textContent;
+                const sensorId = row.getAttribute('data-id');
+
+                document.getElementById('update-equipmentname').value = equipmentname;
+                document.getElementById('update-equipmenturl').value = equipmenturl;
+                document.getElementById('update-equipmentstate').value = equipmentstate;
+                document.getElementById('update-remarks').value = remarks;
+                document.getElementById('update-sensor-id').value = sensorId; // 设置传感器 ID 的值
+
+                updateSensorModal.style.display = 'block';
+            } else if (event.target && event.target.classList.contains('delete-btn')) {
+                console.log("监听到点击删除按钮")
+                const row = event.target.closest('tr');
+                const equipmentname = row.cells[0].textContent;
+                const equipmenturl = row.cells[1].textContent;
+                const equipmentstate = row.cells[2].textContent;
+                const remarks = row.cells[3].textContent;
+                const sensorId = row.getAttribute('data-id');
+                console.log(equipmentname);
+
+                try {
+                    const response = fetch('/delete_sensor', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            equipmentname: equipmentname,
+                            equipmenturl: equipmenturl,
+                            equipmentstate: equipmentstate,
+                            remarks: remarks
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Sensor delete: ' + equipmentname);
+                        location.reload(); // 刷新页面
+                    }
+
+                    const result = response.json();
+                    alert('Sensor delete: ' + equipmentname);
+                    addSensorModal.style.display = 'none';
+                    addSensorForm.reset();
+                    location.reload(); // 刷新页面
+                } catch (error) {
+                    console.error('Sensor delete: ' + equipmentname);
+                    alert('Sensor delete: ' + equipmentname);
+                    location.reload(); // 刷新页面
+                }
+            }
+        });
+        updateSensorForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const equipmentname = document.getElementById('update-equipmentname').value;
+            const equipmenturl = document.getElementById('update-equipmenturl').value;
+            const equipmentstate = document.getElementById('update-equipmentstate').value;
+            const remarks = document.getElementById('update-remarks').value;
+
+            try {
+                const response = await fetch('/update_sensor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        equipmentname: equipmentname,
+                        equipmenturl: equipmenturl,
+                        equipmentstate: equipmentstate,
+                        remarks: remarks
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                alert('Sensor update: ' + equipmentname);
+                addSensorModal.style.display = 'none';
+                addSensorForm.reset();
+                location.reload(); // 刷新页面
+            } catch (error) {
+                console.error('Error creating sensor:', error);
+                alert('Failed to create sensor: ' + error.message);
+            }
+        });
+
+        addSensorForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const equipmentname = document.getElementById('equipmentname').value;
+            const equipmenturl = document.getElementById('equipmenturl').value;
+            const equipmentstate = document.getElementById('equipmentstate').value;
+            const remarks = document.getElementById('remarks').value;
+
+            try {
+                const response = await fetch('/create_sensor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        equipmentname: equipmentname,
+                        equipmenturl: equipmenturl,
+                        equipmentstate: equipmentstate,
+                        remarks: remarks
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                alert('Sensor created: ' + equipmentname);
+                addSensorModal.style.display = 'none';
+                addSensorForm.reset();
+                location.reload(); // 刷新页面
+            } catch (error) {
+                console.error('Error creating sensor:', error);
+                alert('Failed to create sensor: ' + error.message);
+            }
+        });
+
+
+        // 监听全局点击事件，关闭模态框
+        window.onclick = function (event) {
+            if (event.target === addSensorModal || event.target === updateSensorModal) {
+                addSensorModal.style.display = 'none';
+                updateSensorModal.style.display = 'none';
+            }
+        };
+
+        // 额外的关闭按钮处理
+        const closeModalButtons = document.querySelectorAll('.close');
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const modal = this.closest('.modal');
+                modal.style.display = 'none';
+            });
+        });
+    });
+</script>
+{{/block}}

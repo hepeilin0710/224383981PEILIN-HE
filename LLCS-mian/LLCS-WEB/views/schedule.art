@@ -1,0 +1,329 @@
+{{extend './base.art'}}
+<block name="title">Schedule</block>
+
+{{block 'content'}}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.0.0/dist/echarts.min.js"></script>
+
+<h2>Schedule Management</h2>
+<button type="button" class="btn btn-sm btn-primary add-sensor-btn">Add Schedule</button>
+<table class="table">
+<span>Now Time:</span>
+<span id="current-time">loading...</span>
+    <thead>
+        <tr>
+            <th>timeid</th>
+            <th>timetext</th>
+            <th>action</th>
+            <th>lightname</th>
+            <th>timestate</th>
+            <th>Operation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ each schedules }}
+        <tr data-timeid="{{ $value.timeid }}" data-timetext="{{ $value.timetext }}"
+            data-action="{{ $value.action }}" data-lightname="{{ $value.lightname }}"
+            data-timestate="{{ $value.timestate }}">
+            <td>{{ $value.timeid }}</td>
+            <td>{{ $value.timetext }}</td>
+            <td>{{ $value.action }}</td>
+            <td>{{ $value.lightname }}</td>
+            <td>{{ $value.timestate }}</td>
+            <td>
+                <button class="btn btn-sm btn-primary update-btn" data="{{ $value.timeid }}">Update</button>
+                <button class="btn btn-sm btn-danger delete-btn" data="{{ $value.timeid }}">Delete</button>
+            </td>
+        </tr>
+        {{ /each }}
+    </tbody>
+</table>
+<div id="adminPieChart" style="width: 600px;height:400px;"></div>
+
+<!-- Add Sensor Modal -->
+<div class="modal add-sensor-modal" tabindex="-1" role="dialog" style="display:none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Schedule</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-sensor-form">
+                    <div class="form-group">
+                        <label for="timeid">timeid:</label>
+                        <input type="text" class="form-control" id="timeid" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="timetext">timetext:</label>
+                        <input type="text" class="form-control" id="timetext" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="action">action:</label>
+                        <select class="form-control" id="action" required>
+                            <option value="Not started">Not started</option>
+                            <option value="Started">Started</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lightname">lightname:</label>
+                        <select class="form-control" id="lightname" required>
+                        {{ each lights }}
+                        <option value="{{ $value.equipmentname }}">{{ $value.equipmentname }}</option>
+                        {{ /each }}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="timestate">timestate:</label>
+                        <select class="form-control" id="timestate" required>
+                            <option value="Enable">Enable</option>
+                            <option value="Disable">Disable</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Sensor Modal -->
+<div class="modal update-sensor-modal" tabindex="-1" role="dialog" style="display:none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Schedule</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-sensor-form">
+                    <div class="form-group">
+                        <label for="update-timeid">timeid:</label>
+                        <input type="text" class="form-control" id="update-timeid" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-timetext">timetext:</label>
+                        <input type="text" class="form-control" id="update-timetext" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-action">action:</label>
+                        <select class="form-control" id="update-action" required>
+                            <option value="Not started">Not started</option>
+                            <option value="Started">Started</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-lightname">lightname:</label>
+                        <select class="form-control" id="update-lightname" required>
+                        {{ each lights }}
+                        <option value="{{ $value.equipmentname }}">{{ $value.equipmentname }}</option>
+                        {{ /each }}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-timestate">timestate:</label>
+                        <select class="form-control" id="update-timestate" required>
+                            <option value="Enable">Enable</option>
+                            <option value="Disable">Disable</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="update-sensor-id" name="update-sensor-id">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addSensorModal = document.querySelector('.add-sensor-modal');
+        const updateSensorModal = document.querySelector('.update-sensor-modal');
+        const addSensorBtn = document.querySelector('.add-sensor-btn');
+        const addSensorForm = document.getElementById('add-sensor-form');
+        const updateSensorForm = document.getElementById('update-sensor-form');
+        const updateSensorBtn = document.querySelector('.update-btn')
+
+        addSensorBtn.addEventListener('click', function () {
+            addSensorModal.style.display = 'block';
+            document.getElementById('update-timeid').value = timeid;
+            document.getElementById('update-timetext').value = timetext;
+            document.getElementById('update-action').value = action;
+            document.getElementById('update-lightname').value = lightname;
+            document.getElementById('update-timestate').value = timestate; // 添加对传感器 ID 的隐藏输入字段
+        });
+        // 使用事件委托来监听所有更新按钮的点击事件
+        document.body.addEventListener('click', function (event) {
+            if (event.target && event.target.classList.contains('update-btn')) {
+                const row = event.target.closest('tr');
+                const timeid = row.cells[0].textContent;
+                const timetext = row.cells[1].textContent;
+                const action = row.cells[2].textContent;
+                const lightname = row.cells[3].textContent;
+                const timestate = row.cells[4].textContent;
+
+                document.getElementById('update-timeid').value = timeid;
+                document.getElementById('update-timetext').value = timetext;
+                document.getElementById('update-action').value = action;
+                document.getElementById('update-lightname').value = lightname;
+                document.getElementById('update-timestate').value = timestate; // 设置传感器 ID 的值
+
+                updateSensorModal.style.display = 'block';
+            } else if (event.target && event.target.classList.contains('delete-btn')) {
+                console.log("监听到点击删除按钮")
+                const row = event.target.closest('tr');
+                const timeid = row.cells[0].textContent;
+                const timetext = row.cells[1].textContent;
+                const action = row.cells[2].textContent;
+                const lightname = row.cells[3].textContent;
+                const timestate = row.cells[4].textContent;
+
+                try {
+                    const response = fetch('/delete_schedule', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            timeid: timeid,
+                            timetext: timetext,
+                            action: action,
+                            lightname: lightname,
+                            timestate: timestate
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Schedule delete: ' + timeid);
+                        location.reload(); // 刷新页面
+                    }
+
+                    const result = response.json();
+                    alert('Schedule delete: ' + timeid);
+                    addSensorModal.style.display = 'none';
+                    addSensorForm.reset();
+                    location.reload(); // 刷新页面
+                } catch (error) {
+                    console.error('Sensor delete: ' + timeid);
+                    alert('Schedule delete: ' + timeid);
+                    location.reload(); // 刷新页面
+                }
+            }
+        });
+        updateSensorForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const timeid = document.getElementById('update-timeid').value
+            const timetext = document.getElementById('update-timetext').value;
+            const action = document.getElementById('update-action').value;
+            const lightname = document.getElementById('update-lightname').value;
+            const timestate = document.getElementById('update-timestate').value;
+
+            try {
+                const response = await fetch('/update_schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        timeid: timeid,
+                        timetext: timetext,
+                        action: action,
+                        lightname: lightname,
+                        timestate: timestate
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                alert('Schedule update: ' + timeid);
+                addSensorModal.style.display = 'none';
+                addSensorForm.reset();
+                location.reload(); // 刷新页面
+            } catch (error) {
+                console.error('Error creating sensor:', error);
+                alert('Failed to create sensor: ' + error.message);
+            }
+        });
+
+        addSensorForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const timeid = document.getElementById('timeid').value
+            const timetext = document.getElementById('timetext').value;
+            const action = document.getElementById('action').value;
+            const lightname = document.getElementById('lightname').value;
+            const timestate = document.getElementById('timestate').value;
+
+
+            try {
+                const response = await fetch('/create_schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        timeid: timeid,
+                        timetext: timetext,
+                        action: action,
+                        lightname: lightname,
+                        timestate: timestate
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                alert('Schedule created: ' + timeid);
+                addSensorModal.style.display = 'none';
+                addSensorForm.reset();
+                location.reload(); // 刷新页面
+            } catch (error) {
+                console.error('Error creating sensor:', error);
+                alert('Failed to create sensor: ' + error.message);
+            }
+        });
+
+
+        // 监听全局点击事件，关闭模态框
+        window.onclick = function (event) {
+            if (event.target === addSensorModal || event.target === updateSensorModal) {
+                addSensorModal.style.display = 'none';
+                updateSensorModal.style.display = 'none';
+            }
+        };
+
+        // 额外的关闭按钮处理
+        const closeModalButtons = document.querySelectorAll('.close');
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const modal = this.closest('.modal');
+                modal.style.display = 'none';
+            });
+        });
+    });
+    function fetchCurrentTime() {
+    fetch('/current-time')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('current-time').textContent = data.currentTime;
+        })
+        .catch(error => {
+            console.error('Error fetching current time:', error);
+        });
+}
+
+// 初始化时间显示
+fetchCurrentTime();
+
+// 每隔一秒更新时间
+setInterval(fetchCurrentTime, 1000);
+</script>
+{{/block}}

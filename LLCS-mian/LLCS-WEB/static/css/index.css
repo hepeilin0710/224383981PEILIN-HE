@@ -1,0 +1,185 @@
+h2 {
+    margin: 0;
+    color: #24b1e0;
+    font-size: 2.8em;
+    text-shadow: 0 2px #131313;
+    font-weight: bold;
+}
+
+.home_subtit {
+    color: #333;
+    font-size: 1.7em;
+    text-shadow: 0 1px 0 #000;
+    margin-top: 7px;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-safety-section {
+    flex: 1;  
+    margin: 5px;
+    box-shadow: 2px 2px 4px #000;
+    overflow: hidden;
+}
+
+.swiper-container {
+    width: 100%;
+    height: auto; 
+}
+
+.swiper-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide {
+    box-sizing: border-box;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#home-learning {
+    background-color: #f5f5f5;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.home_tit h2 {
+    color: #2a7ab9;
+    font-size: 2rem;
+}
+
+.home_subtit {
+    color: #666;
+    font-size: 1.5rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.home_des {
+    font-size: 1.2rem;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.home-learning-box {
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 15px;
+    width: 280px; 
+    margin-bottom: 20px;
+}
+
+.home-learning-box h3 {
+    font-size: 1.1rem;
+    margin-top: 5px;
+}
+
+.home-learning-img {
+    width: 100%;
+    height: auto;
+}
+
+.home-learning-des {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+.home-more {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2a7ab9;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.home-more:hover {
+    background-color: #1e85b8;
+    transition: background-color 0.3s;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-learning-box {
+        width: 90%;
+    }
+}
+
+
+.sidebar {
+    width: 20%;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    background-color: #3498db;
+    color: white;
+}
+
+.sidebar-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    color: white;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sidebar-button:hover {
+    background-color: #2980b9;
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    width: 100%;
+}
+
+.card {
+    flex: 1 0 30%;
+    min-width: 300px; 
+    padding: 20px;
+    margin: 10px;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.card p {
+    color: #7f8c8d;
+}

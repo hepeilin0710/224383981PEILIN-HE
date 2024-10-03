@@ -1,0 +1,62 @@
+{{extend './base.art'}}
+{{block 'content'}}
+<style>
+        /* 基本重置样式 */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        /* 表单样式 */
+        .user-info-form {
+            max-width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-value {
+            font-size: 16px;
+            padding: 8px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            display: block;
+        }
+</style>
+<h2 class="user-info-title">User Info {{ user.username }}</h2>
+<form method="post" class="user-info-form">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <span class="form-value">{{ user.username }}</span>
+    </div>
+    <div class="form-group">
+        <label for="age">Age</label>
+        <span class="form-value">{{ user.userage }}</span>
+    </div>
+    <div class="form-group">
+        <label for="role">Role</label>
+        <span class="form-value">{{ user.userrole }}</span>
+    </div>
+</form>
+{{/block}}

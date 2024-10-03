@@ -1,0 +1,85 @@
+llcs
+use llcs
+
+
+userid
+username 
+password 
+userage 
+userrole 
+
+db.users.insert({
+    "userid": "u123",
+    "username": "JohnDoe",
+    "password": "hashedPassword",
+    "userage": 28,
+    "userrole": "admin"
+});
+
+
+db.users.insert({
+    "userid": "1",
+    "username": "test",
+    "password": "88888888",
+    "userage": 28,
+    "userrole": "admin"
+});
+
+
+
+
+equipmentid 
+equipmenttype 
+equipmentname 
+equipmentusername 
+equipmenturl 
+equipmentstate 
+remarks
+
+db.equipments.insert({
+    "equipmentid": "e456",
+    "equipmenttype": "sensor",
+    "equipmentname": "TemperatureSensor1",
+    "equipmentusername": "JohnDoe",
+    "equipmenturl": "http://example.com/sensor1",
+    "equipmentstate": "Not started",
+    "remarks": "This is the main temperature sensor for the building."
+});
+
+db.equipments.insert({
+    "equipmentid": "e452",
+    "equipmenttype": "sensor",
+    "equipmentname": "TemperatureSensor1",
+    "equipmentusername": "test",
+    "equipmenturl": "http://example.com/sensor1",
+    "equipmentstate": "Not started",
+    "remarks": "This is the main temperature sensor for the building."
+});
+
+db.equipments.insert({
+    "equipmentid": "e458",
+    "equipmenttype": "light",
+    "equipmentname": "TemperatureSensor1",
+    "color": "red",
+    "equipmentusername": "aaa",
+    "equipmenturl": "http://example.com/sensor1",
+    "equipmentstate": "Not started",
+    "remarks": "This is the main temperature sensor for the building."
+});
+
+
+timeid 
+timetext 
+action 
+lightname 
+timestate 
+timeusername 
+
+db.timeschedules.insert({
+    "timeid": "t789",
+    "timetext": "09:30",
+    "action": "Turn on the lights",
+    "lightname": "aaa",
+    "timestate": "scheduled",
+    "timeusername": "aaa"
+});

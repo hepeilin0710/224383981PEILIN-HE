@@ -1,0 +1,26 @@
+{{extend './base.art'}}
+
+<block name="title">首页</block>
+
+{{block 'content'}}
+<link rel="stylesheet" type="text/css" href="/css/index.css">
+
+<h2>Light</h2>
+<div class="box">
+    <div class="container">
+        <div class="cards-container">
+            {{ each lights }}
+            <div class="card">
+                <h3>{{ $value.equipmentname }}</h3>
+                <p>{{ $value.equipmentstate }}</p>
+                <p>{{ $value.remarks }}</p>
+            </div>
+            {{ /each }}
+        </div>
+    </div>
+</div>
+
+
+
+
+{{/block}}

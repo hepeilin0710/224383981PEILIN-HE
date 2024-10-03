@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Welcome to the Smart lighting system, please log in</h2>
+        <form id="loginForm" action="" method="post">
+            <input type="text" name="username" placeholder="username" required>
+            <input type="password" name="password" placeholder="password" required>
+            <div style="display: flex; justify-content: space-between;">
+                <button type="submit">Login</button>
+                <a href="/registration" class="btn">Registration</a>
+            </div>
+            <!-- 模态弹窗 -->
+            <div id="myModal" class="modal">
+                <!-- 模态内容 -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p>{{ message }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        // 获取模态弹窗元素
+        var modal = document.getElementById("myModal");
+        // 获取关闭按钮元素
+        var span = document.getElementsByClassName("close")[0];
+
+        // 当用户点击模态内容之外的区域时关闭弹窗
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // 当用户点击关闭按钮时关闭弹窗
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // 如果页面加载后存在消息，则显示模态弹窗
+//         window.onload = function () {
+//             if ({% if messages %}true{% endif %}) {
+//             modal.style.display = "block";
+//         }
+// }
+    </script>
+
+</body>
+
+</html>

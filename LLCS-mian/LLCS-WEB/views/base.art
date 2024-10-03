@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%- title ? title + ' - Your Site Name' : 'Your Site Name' %>
+    </title>
+    <link rel="stylesheet" href="/bootstrap-4.0.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-purple">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">Smart lighting system</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
+                            Equipment management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/sensor_management">Sensor management</a></li>
+                            <li><a class="dropdown-item" href="/light_management">Lighting management</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="SSJK" role="button" data-toggle="dropdown" aria-expanded="false">
+                            Schedule management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="SSJK">
+                            <li><a class="dropdown-item" href="/schedule">View schedule</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-expanded="false">
+                    <img src="/images/user_avatar.png" alt="Avatar" class="rounded-circle" width="30">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="/user_info">User Info</a></li>
+                    <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        {{block 'content'}}{{/block}}
+    </div>
+
+    <script src="/js/custom.js"></script>
+</body>
+</html>
